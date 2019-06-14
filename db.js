@@ -1,6 +1,6 @@
-import dbTable from './table.mjs';
+import Table from './table.mjs';
 
-class db {
+class DB {
     constructor(connection){
         this.conn = connection;
         this.tables = {};
@@ -16,7 +16,7 @@ class db {
         });
     }
     table(name){
-        if (!this.tables[name]) this.tables[name] = new dbTable(this,name);
+        if (!this.tables[name]) this.tables[name] = new Table(this,name);
         return this.tables[name];
     }
     query(sql){
@@ -40,4 +40,4 @@ class db {
     }
 }
 
-export default db;
+export default DB;
