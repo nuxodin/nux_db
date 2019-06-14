@@ -1,14 +1,8 @@
-import mysql from 'mysql';
-import dbTable from './dbTable.mjs';
+import dbTable from './table.mjs';
 
 class db {
-    constructor(host, user, pass, name){
-        this.conn = mysql.createConnection({
-            host     : host,
-            user     : user,
-            password : pass,
-            database : name,
-        });
+    constructor(connection){
+        this.conn = connection;
         this.tables = {};
 
         return new Proxy(this, { // suger baby!
