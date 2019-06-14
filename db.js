@@ -1,4 +1,4 @@
-import Table from './table.mjs';
+import Table from './Table.js';
 
 class DB {
     constructor(connection){
