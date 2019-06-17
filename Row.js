@@ -23,6 +23,7 @@ class Row {
         });
     }
     cell(name) {
+        console.log(name)
         if (!this._cells[name]) this._cells[name] = new Cell(this, name);
         return this._cells[name];
     }
