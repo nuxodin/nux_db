@@ -20,8 +20,7 @@ const Table = class {
         });
     }
     row(eid) {
-        //var useClass = Row.class[this.name] || Row;
-        var useClass = this.rowClass || Row; // better, something like this?
+        const useClass = this.rowClass || Row; // better, something like this?
         if (!this._rows[eid]) this._rows[eid] = new useClass(this, eid);
         return this._rows[eid];
     }
