@@ -48,7 +48,6 @@ const Table = class {
             this.a_fields = [];
             this.a_primaries = [];
             all.forEach(values=>{
-console.log(values['Field']);
                 const name = values['Field'];
                 const field = new Field(this, name);
                 this._fields[name] = field;
