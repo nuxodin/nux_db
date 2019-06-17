@@ -44,7 +44,7 @@ class DB {
         if (row) for (let i in row) return row[i];
     }
     quote(value){
-        return "'"+str.replace(/'/g, "\'")+"'";
+        return "'"+value.replace(/'/g, "\'")+"'";
         return this.conn.escape(value);
     }
 }
