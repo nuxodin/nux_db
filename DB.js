@@ -20,6 +20,8 @@ class DB {
         return this.tables[name];
     }
 
+
+
     /* sql */
     query(sql){
         return new Promise((resolve,reject)=>{

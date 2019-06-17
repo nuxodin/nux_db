@@ -20,8 +20,8 @@ const Table = class {
         });
     }
     row(eid) {
-        //var useClass = dbRow.class[this.name] || dbRow;
-        var useClass = this.rowClass || dbRow; // better, something like this?
+        //var useClass = Row.class[this.name] || Row;
+        var useClass = this.rowClass || Row; // better, something like this?
         if (!this._rows[eid]) this._rows[eid] = new useClass(this, eid);
         return this._rows[eid];
     }
@@ -49,7 +49,7 @@ const Table = class {
             this.a_primaries = [];
             all.forEach(values=>{
                 const name = values['Field'];
-                const field = new dbField(this, name);
+                const field = new Field(this, name);
                 this._fields[name] = field;
                 this.a_fields.push(field);
                 if (values['Key'] === 'PRI') this.a_primaries.push(field);
@@ -69,7 +69,7 @@ const Table = class {
     async rowId(array){
         if ({string:1,number:1}[typeof array]) return array;
         return (await this.primaries()).map(field=>{
-            //if (field instanceof dbRow) { ... }
+            //if (field instanceof Row) { ... }
             if (array[field.name] === undefined) console.warn('entryId: property "'+field.name+'" not present');
             return array[field.name];
         }).join('-:-');
