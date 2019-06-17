@@ -8,7 +8,10 @@ class Cell {
     get value() {
         if (this.P_value === undefined) {
             this.P_value = this.row.table.rowIdToWhere(this.row.eid).then(where=>{
-                return await this.row.table.db.one("SELECT "+this.name+" FROM "+this.row.table+" WHERE "+where+" "); // return not needed
+                console.log(where);
+                const P = this.row.table.db.one("SELECT "+this.name+" FROM "+this.row.table+" WHERE "+where+" "); // return not needed;
+                console.log(P);
+                return P;
             });
         }
         return this.P_value;
