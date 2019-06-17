@@ -24,6 +24,13 @@ class DB {
 
     /* sql */
     query(sql){
+        try {
+            return this.conn.query(sql);
+        } catch(e) {
+            console.warn(e);
+            console.log(sql);
+        }
+
         return this.conn.query(sql);
         return new Promise((resolve,reject)=>{
             this.conn.query(sql, function (error, results, /*fields*/) {
