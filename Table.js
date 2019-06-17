@@ -159,7 +159,7 @@ const Table = class {
         if (!Statement.affectedRows) return false;
         let auto = await this.autoincrement();
         if (auto) {
-            data[auto.name] = Statement.insertId;
+            data[auto.name] = Statement.lastInsertId;
         }
         const rowId = await this.rowId(data);
         //this.trigger('insert-after',data);
