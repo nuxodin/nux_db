@@ -26,6 +26,23 @@ const Table = class {
         return this._rows[eid];
     }
     async rows(filter) {
+        /* todo!:
+        var where = await this.objectToWhere(filter);
+        this.db.query("SELECT * FROM "+this.name+" WHERE " + where);
+        let all = await this.db.query("SELECT * FROM "+this.name+" WHERE " + wheres.join(' AND ')); // todo select only primaries
+        let rows = [];
+        for (let data of all) {
+            let id = await this.rowId(data);
+            var row = this.row(id);
+            for (var i in data) {
+                row.cell(i).P_value = Promise.resolve(data[i]); // set silent
+            }
+            rows.push(row);
+        }
+        return rows;
+        */
+
+
         let wheres = [];
         for (let key in filter) {
             wheres.push(key+' = '+this.db.quote(filter[key]));
