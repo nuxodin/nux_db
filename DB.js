@@ -26,8 +26,9 @@ class DB {
     query(sql){
         return new Promise((resolve,reject)=>{
             this.conn.query(sql, function (error, results, /*fields*/) {
-                if (error) reject(error);
-                else resolve(results);
+                resolve(results);
+                //if (error) reject(error);
+                //else resolve(results);
             });
         });
     }
