@@ -120,8 +120,7 @@ const Table = class {
             if (object[field.name] === undefined) continue;
             //let sqlValue = field.valueToSql(object[field.name]);
             let sqlValue = this.db.quote(object[field.name]);
-            let sqlField = (alias?alias+'.':'') + field;
-            console.log(sqlField);
+            let sqlField = (alias?alias+'.':'') + field.name;
 			let equal = ' = ';
 			//let equal = (!isSet && sqlValue==='NULL'?' IS ':' = ');
 			sqls.push(sqlField + equal + sqlValue);
