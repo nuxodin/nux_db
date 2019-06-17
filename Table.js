@@ -93,18 +93,20 @@ const Table = class {
         }).join('-:-');
     }
     async rowIdObject(id){
-        if (!{string:1,number:1}[typeof id]) return id;
+        const isObject = !{string:1,number:1}[typeof id];
         const object = Object.create(null);
         const primaries = await this.primaries();
-        if (Array.isArray(id)) {
+        if (isObject) { // make a new object, or better return id direct?
             for (let field of primaries) {
-                if (id[field.name] === undefined) throw('rowIdArray: property "'+field.name+'" not present');
+                if (id[field.name] === undefined) throw('rowIdObject: property "'+field.name+'" not present');
                 object[field.name] = id[field.name];
             }
         } else {
             const values = (id+'').split('-:-');
             for (let field of primaries) {
-                object[field.name] = values.shift();
+                let value = values.shift();
+                if (value === undefined) throw('rowIdObject: property "'+field.name+'" not present');
+                object[field.name] = value;
             }
         }
         return object;
