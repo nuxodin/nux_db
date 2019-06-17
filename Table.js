@@ -88,7 +88,7 @@ const Table = class {
         if ({string:1,number:1}[typeof array]) return array;
         return (await this.primaries()).map(field=>{
             //if (field instanceof Row) { ... }
-            if (array[field.name] === undefined) console.warn('entryId: property "'+field.name+'" not present');
+            if (array[field.name] === undefined) throw('entryId: property "'+field.name+'" not present');
             return array[field.name];
         }).join('-:-');
     }
@@ -98,7 +98,7 @@ const Table = class {
         const primaries = await this.primaries();
         if (Array.isArray(id)) {
             for (let field of primaries) {
-                if (id[field.name] === undefined) console.warn('rowIdArray: property "'+field.name+'" not present');
+                if (id[field.name] === undefined) throw('rowIdArray: property "'+field.name+'" not present');
                 object[field.name] = id[field.name];
             }
         } else {
