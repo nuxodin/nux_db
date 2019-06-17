@@ -121,6 +121,7 @@ const Table = class {
             //let sqlValue = field.valueToSql(object[field.name]);
             let sqlValue = this.db.quote(object[field.name]);
             let sqlField = (alias?alias+'.':'') + field;
+            console.log(sqlField);
 			let equal = ' = ';
 			//let equal = (!isSet && sqlValue==='NULL'?' IS ':' = ');
 			sqls.push(sqlField + equal + sqlValue);
