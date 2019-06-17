@@ -19,6 +19,8 @@ class DB {
         if (!this.tables[name]) this.tables[name] = new Table(this,name);
         return this.tables[name];
     }
+
+    /* sql */
     query(sql){
         return new Promise((resolve,reject)=>{
             this.conn.query(sql, function (error, results, /*fields*/) {
