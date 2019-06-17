@@ -158,6 +158,7 @@ const Table = class {
         const Statement = await this.db.query("INSERT INTO " + this + (set ? " SET "+set : " () values () "));
         if (!Statement.affectedRows) return false;
         let auto = await this.autoincrement();
+        console.log(Statement.lastInsertId, 'last-inserted')
         if (auto) data[auto.name] = Statement.lastInsertId;
         const rowId = await this.rowId(data);
         //this.trigger('insert-after',data);
