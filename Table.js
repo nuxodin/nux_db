@@ -66,6 +66,7 @@ const Table = class {
         await this.fields();
         return this._autoincrement;
     }
+
     async rowId(array){
         if ({string:1,number:1}[typeof array]) return array;
         return (await this.primaries()).map(field=>{
@@ -75,6 +76,7 @@ const Table = class {
         }).join('-:-');
     }
     async rowIdObject(id){
+        if (!{string:1,number:1}[typeof id]) return id;
         const object = Object.create(null);
         const primaries = await this.primaries();
         if (Array.isArray(id)) {
@@ -92,27 +94,35 @@ const Table = class {
     }
     async rowIdToWhere(id){
         const obj = await this.rowIdObject(id);
-        const sqls = await this.objectToSqls(obj);
-        return sqls.join(' AND ');
+        return await this.objectToWhere(obj);
     }
-    async objectToWhere(data){
-        const sqls = await this.objectToSqls(data);
-        return sqls.join(' AND ');
-    }
-    async objectToSet(data){
-        const sqls = await this.objectToSqls(data);
-        return sqls.join(' , ');
-    }
-    async objectToSqls(object) {
+    async _objectToSqls(object, alias=null, isSet=false) {
         const sqls = [];
         const fields = await this.fields();
         for (let field of fields) {
             if (object[field.name] === undefined) continue;
-            //sqls.push(" ".$field." = ".field.valueToSql(object[field.name])." "); todo
-            sqls.push(" "+field.name+" = "+this.db.quote(object[field.name])+" ");
+            //let sqlValue = field.valueToSql(object[field.name]);
+            let sqlValue = this.db.quote(object[field.name]);
+            let sqlField = (alias?alias+'.':'')+$field;
+			let equal = ' = ';
+			//let equal = (!isSet && sqlValue==='NULL'?' IS ':' = ');
+			sqls.push(sqlField + equal + sqlValue);
         }
         return sqls;
     }
+
+	async objectToWhere(data, alias=null) {
+        const sqls = await this._objectToSqls(data, alias);
+        return sqls.join(' AND ');
+	}
+	async objectToSet(data, alias=null) {
+        const sqls = await this._objectToSqls(data, alias, true);
+        return sqls.join(' , ');
+	}
+
+
+
+
     async insert(data){
 
         // todo intervention
