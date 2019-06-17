@@ -88,7 +88,7 @@ const Table = class {
         if ({string:1,number:1}[typeof array]) return array;
         return (await this.primaries()).map(field=>{
             //if (field instanceof Row) { ... }
-            if (array[field.name] === undefined) throw('entryId: property "'+field.name+'" not present');
+            if (array[field.name] === undefined) throw('entryId: property "'+this+'.'+field.name+'" not present');
             return array[field.name];
         }).join('-:-');
     }
@@ -98,14 +98,14 @@ const Table = class {
         const primaries = await this.primaries();
         if (isObject) { // make a new object, or better return id direct?
             for (let field of primaries) {
-                if (id[field.name] === undefined) throw('rowIdObject: property "'+field.name+'" not present');
+                if (id[field.name] === undefined) throw('rowIdObject: property "'+this+'.'+field.name+'" not present');
                 object[field.name] = id[field.name];
             }
         } else {
             const values = (id+'').split('-:-');
             for (let field of primaries) {
                 let value = values.shift();
-                if (value === undefined) throw('rowIdObject: property "'+field.name+'" not present');
+                if (value === undefined) throw('rowIdObject: property "'+this+'.'+field.name+'" not present');
                 object[field.name] = value;
             }
         }
