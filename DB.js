@@ -4,7 +4,7 @@ class DB {
     constructor(connection){
         this.conn = connection;
         this.tables = {};
-
+        /*
         return new Proxy(this, { // suger baby!
             get(target, name, receiver) {
                 if (name[0] === '$') return receiver.table(name.substr(1));
@@ -14,6 +14,7 @@ class DB {
                 return Reflect.set(target, name, value, receiver);
             }
         });
+        */
     }
     table(name){
         if (!this.tables[name]) this.tables[name] = new Table(this,name);

@@ -4,7 +4,7 @@ import Cell from './Cell.js';
 class Row {
     constructor(table, eid){
         this.table  = table;
-        this.db = table.db;
+        this.db     = table.db;
         this.eid    = eid;
         this._cells = {};
 

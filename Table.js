@@ -8,7 +8,7 @@ const Table = class {
         this.name = name;
         this._rows = {};
         this._fields = {};
-
+        /*
         return new Proxy(this,{ // suger baby!
             get(target, name, receiver) {
                 if (name[0] === '$') return target.row(name.substr(1));
@@ -18,6 +18,7 @@ const Table = class {
                 return Reflect.set(target, name, value, receiver);
             }
         });
+        */
     }
     row(eid) {
         const useClass = this.rowClass || Row; // better, something like this?
