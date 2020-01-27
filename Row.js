@@ -8,6 +8,7 @@ class Row {
         this.eid    = eid;
         this._cells = {};
 
+        /*
         return new Proxy(this,{ // suger baby!
             get(target, name, receiver) {
                 if (name[0] === '$') return target.cell(name.substr(1)).value;
@@ -21,6 +22,7 @@ class Row {
                 return Reflect.set(target, name, value, receiver);
             }
         });
+        */
     }
     cell(name) {
         if (!this._cells[name]) this._cells[name] = new Cell(this, name);

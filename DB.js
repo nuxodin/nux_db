@@ -31,8 +31,7 @@ class DB {
             console.warn(e);
             console.log(sql);
         }
-
-        return this.conn.query(sql);
+        //return this.conn.query(sql);
         return new Promise((resolve,reject)=>{
             this.conn.query(sql, function (error, results, /*fields*/) {
                 resolve(results);
