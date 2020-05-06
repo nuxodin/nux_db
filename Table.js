@@ -21,37 +21,29 @@ const Table = class {
         */
     }
     row(eid) {
+        if (eid === undefined) throw new Error("eid not present");
+
         const useClass = this.rowClass || Row; // better, something like this?
         if (!this._rows[eid]) this._rows[eid] = new useClass(this, eid);
         return this._rows[eid];
     }
-    async rows(filter) {
-        /* todo!:
-        var where = await this.objectToWhere(filter);
-        this.db.query("SELECT * FROM "+this.name+" WHERE " + where);
-        let all = await this.db.query("SELECT * FROM "+this.name+" WHERE " + wheres.join(' AND ')); // todo select only primaries
-        let rows = [];
+    async ensure(filter) {
+        var rows = await this.rows(filter);
+        let row = null;
+        for (row of rows) return row; // return first
+        return this.insert(filter); // else insert, todo: filter?
+    }
+    async rows(filter /* limit? */) {
+        const where = await this.objectToWhere(filter); // todo
+        const all = await this.db.query("SELECT * FROM "+this.name+" WHERE " + where);
+        const rows = [];
         for (let data of all) {
-            let id = await this.rowId(data);
-            var row = this.row(id);
-            for (var i in data) {
-                row.cell(i).P_value = Promise.resolve(data[i]); // set silent
+            const id = await this.rowId(data);
+            const row = this.row(id);
+            for (let i in data) {
+                row.cell(i)._value = data[i]; // todo
             }
-            rows.push(row);
-        }
-        return rows;
-        */
-
-
-        let wheres = [];
-        for (let key in filter) {
-            wheres.push(key+' = '+this.db.quote(filter[key]));
-        }
-        let all = await this.db.query("SELECT * FROM "+this.name+" WHERE " + wheres.join(' AND ')); // todo select only primaries
-        let rows = [];
-        for (let data of all) {
-            let id = await this.rowId(data);
-            rows.push( this.row(id) );
+            rows.push( row );
         }
         return rows;
     }
@@ -78,6 +70,22 @@ const Table = class {
     async primaries(){
         await this.fields();
         return this.a_primaries;
+    }
+    async setPrimaries(newPrimaries){
+        const existing = await this.primaries();
+        let changed = false;
+        for (let newPrimary of newPrimaries) {
+            const field = this._fields[newPrimary];
+            if (!field) throw new Error('field '+this+'.'+newPrimary+' does not exist');
+            if (!existing.includes(field)) changed = true;
+        }
+        if (changed) {
+            try {
+                await this.db.query("ALTER TABLE "+this+" DROP PRIMARY KEY");
+            } catch {}
+            await this.db.query("ALTER TABLE "+this+" ADD PRIMARY KEY ("+newPrimaries.join(',')+")");
+            this.a_field = null; // remove cache
+        }
     }
     async autoincrement(){
         await this.fields();
@@ -159,7 +167,6 @@ const Table = class {
         const Statement = await this.db.query("INSERT INTO " + this + (set ? " SET "+set : " () values () "));
         if (!Statement.affectedRows) return false;
         let auto = await this.autoincrement();
-console.log(Statement.lastInsertId, 'last-inserted');
         if (auto) data[auto.name] = Statement.lastInsertId;
         const rowId = await this.rowId(data);
         //this.trigger('insert-after',data);

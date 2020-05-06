@@ -1,4 +1,4 @@
-
+import { mixin } from '../nux/util/js.js';
 import Cell from './Cell.js';
 
 class Row {
@@ -7,6 +7,8 @@ class Row {
         this.db     = table.db;
         this.eid    = eid;
         this._cells = {};
+
+        if (this.eid === undefined) throw new Exception("eid not present");
 
         /*
         return new Proxy(this,{ // suger baby!
@@ -49,6 +51,34 @@ class Row {
         }
         return obj;
     }
+    /*
+    async set(values){
+        let cells = await this.cells();
+        for (let name in cells) { // todo: Promise.all()
+            if (values[name] !== undefined) {
+                cells[name].value = values[name];
+            }
+        }
+    }
+    */
+    async set(values){
+        if (this.valueToSet === undefined) this.valueToSet = {};
+        // todo clean values here
+        mixin(values, this.valueToSet, true); // time to set other values until this.valueToSet = {};
+        const where = await this.table.rowIdToWhere(this.eid);
+        // todo trigger
+        const sets  = await this.table.objectToSet(this.valueToSet);
+        if (!sets) return;
+        this.valueToSet = {};
+        await this.table.db.query("UPDATE "+this.table+" SET "+sets+" WHERE "+where+" ");
+        const cells = await this.cells();
+        for (let name in cells) {
+            if (values[name] === undefined) continue;
+            cells[name]._value = values[name];
+        }
+    }
+
+
     async is() {
         if (this._is === undefined) await this.cells();
         return this._is ? this : false;

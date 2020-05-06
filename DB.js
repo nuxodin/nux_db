@@ -22,23 +22,15 @@ class DB {
     }
 
 
-
     /* sql */
-    query(sql){
+    query(sql /*, params */){
         try {
-            return this.conn.query(sql);
+            return this.conn.query(sql /*, params */);
         } catch(e) {
-            console.warn(e);
-            console.log(sql);
+            console.log(sql, e)
+            //throw e;
+            return false;
         }
-        //return this.conn.query(sql);
-        return new Promise((resolve,reject)=>{
-            this.conn.query(sql, function (error, results, /*fields*/) {
-                resolve(results);
-                //if (error) reject(error);
-                //else resolve(results);
-            });
-        });
     }
     async row(sql){
         const all = await this.query(sql);
