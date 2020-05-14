@@ -3,9 +3,9 @@ import Cell from './Cell.js';
 
 class Row {
     constructor(table, eid){
+        this.eid    = eid;
         this.table  = table;
         this.db     = table.db;
-        this.eid    = eid;
         this._cells = {};
 
         if (this.eid === undefined) throw new Exception("eid not present");

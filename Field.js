@@ -1,8 +1,8 @@
 
 class Field {
     constructor(table, name) {
-        this.table = table;
         this.name = name;
+        this.table = table;
     }
     // async isPrimary(){
     //     const primaries = await this.table.primaries();
