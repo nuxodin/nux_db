@@ -21,7 +21,6 @@ class DB {
         return this.tables[name];
     }
 
-
     /* sql */
     query(sql /*, params */){
         try {

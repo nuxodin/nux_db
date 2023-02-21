@@ -28,7 +28,7 @@ const Table = class {
         return this._rows[eid];
     }
     async ensure(filter) {
-        var rows = await this.rows(filter);
+        const rows = await this.rows(filter);
         let row = null;
         for (row of rows) return row; // return first
         return this.insert(filter); // else insert, todo: filter?
@@ -37,10 +37,10 @@ const Table = class {
         const where = await this.objectToWhere(filter); // todo
         const all = await this.db.query("SELECT * FROM "+this.name+" WHERE " + where);
         const rows = [];
-        for (let data of all) {
+        for (const data of all) {
             const id = await this.rowId(data);
             const row = this.row(id);
-            for (let i in data) {
+            for (const i in data) {
                 row.cell(i)._value = data[i]; // todo
             }
             rows.push( row );
@@ -53,7 +53,7 @@ const Table = class {
     }
     async fields(){
         if (!this.a_fields) {
-            var all = await this.db.query("SHOW FIELDS FROM " + this);
+            const all = await this.db.query("SHOW FIELDS FROM " + this);
             this.a_fields = [];
             this.a_primaries = [];
             all.forEach(values=>{
@@ -74,7 +74,7 @@ const Table = class {
     async setPrimaries(newPrimaries){
         const existing = await this.primaries();
         let changed = false;
-        for (let newPrimary of newPrimaries) {
+        for (const newPrimary of newPrimaries) {
             const field = this._fields[newPrimary];
             if (!field) throw new Error('field '+this+'.'+newPrimary+' does not exist');
             if (!existing.includes(field)) changed = true;

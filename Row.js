@@ -9,22 +9,6 @@ class Row {
         this._cells = {};
 
         if (this.eid === undefined) throw new Exception("eid not present");
-
-        /*
-        return new Proxy(this,{ // suger baby!
-            get(target, name, receiver) {
-                if (name[0] === '$') return target.cell(name.substr(1)).value;
-                return Reflect.get(target, name, receiver);
-            },
-            set(target, name, value, receiver) {
-                if (name[0] === '$') {
-                    target.cell(name.substr(1)).value = value;
-                    return true;
-                }
-                return Reflect.set(target, name, value, receiver);
-            }
-        });
-        */
     }
     cell(name) {
         if (!this._cells[name]) this._cells[name] = new Cell(this, name);
@@ -35,7 +19,7 @@ class Row {
             const where = await this.table.rowIdToWhere(this.eid);
             const data = await this.db.row("SELECT * FROM "+this.table+" WHERE "+where);
             this._is = !!data;
-            for (let name in data) {
+            for (const name in data) {
                 const cell = this.cell(name);
                 if (cell.P_value === undefined) cell.P_value = Promise.resolve(data[name]);
             }
@@ -44,9 +28,9 @@ class Row {
         return this._cells;
     }
     async values() {
-        let obj = {};
-        let cells = await this.cells();
-        for (let name in cells) { // todo: Promise.all()
+        const obj = {};
+        const cells = await this.cells();
+        for (const name in cells) { // todo: Promise.all()
             obj[name] = await cells[name].value;
         }
         return obj;
@@ -72,7 +56,7 @@ class Row {
         this.valueToSet = {};
         await this.table.db.query("UPDATE "+this.table+" SET "+sets+" WHERE "+where+" ");
         const cells = await this.cells();
-        for (let name in cells) {
+        for (const name in cells) {
             if (values[name] === undefined) continue;
             cells[name]._value = values[name];
         }
@@ -84,7 +68,7 @@ class Row {
         return this._is ? this : false;
     }
     async makeIfNot() {
-        let is = await this.is();
+        const is = await this.is();
         if (!is) {
             const values = await this.table.rowIdObject(this.eid);
             return await this.table.insert(values);
